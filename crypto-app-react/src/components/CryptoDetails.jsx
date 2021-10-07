@@ -13,6 +13,7 @@ import {
   CheckOutlined,
   NumberOutlined,
   ThunderboltOutlined,
+  ToTopOutlined,
 } from "@ant-design/icons";
 
 import { useGetCryptoDetailsQuery } from "../services/cryptoApi";
@@ -31,23 +32,28 @@ const CryptoDetails = ({}) => {
   const stats = [
     {
       title: "Price to USD",
-      value: `$ ${cryptoDetails.price && millify(cryptoDetails.price)}`,
+      value: cryptoDetails ? millify(cryptoDetails.price) : "",
       icon: <DollarCircleOutlined />,
     },
-    { title: "Rank", value: cryptoDetails.rank, icon: <NumberOutlined /> },
+    {
+      title: "Rank",
+      value: cryptoDetails ? millify(cryptoDetails.rank) : "",
+      icon: <NumberOutlined />,
+    },
     {
       title: "24h Volume",
-      value: `$ ${cryptoDetails.volume && millify(cryptoDetails.volume)}`,
+      value: cryptoDetails ? millify(cryptoDetails.volume) : "",
       icon: <ThunderboltOutlined />,
     },
     {
       title: "Market Cap",
-      value: `$ ${cryptoDetails.marketCap && millify(cryptoDetails.marketCap)}`,
+      value: cryptoDetails ? millify(cryptoDetails.marketCap) : "",
       icon: <DollarCircleOutlined />,
     },
     {
       title: "All-time-high(daily avg.)",
-      value: `$ ${millify(cryptoDetails.allTimeHigh.price)}`,
+      value: cryptoDetails ? millify(cryptoDetails.allTimeHigh.price) : "",
+
       icon: <TrophyOutlined />,
     },
   ];
@@ -85,6 +91,11 @@ const CryptoDetails = ({}) => {
   ];
 
   return (
+    // <>
+    //   <div>here i am {stats[1].value}</div>
+    //   <div>here i am {stats[1].icon}</div>
+    // </>
+    // );
     <Col className="coin-details-container">
       <Col className="coin-details-container">
         <Title level={2} className="coin-name">
@@ -139,6 +150,29 @@ const CryptoDetails = ({}) => {
               </Col>
               <Text className="stats">{value}</Text>
             </Col>
+          ))}
+        </Col>
+      </Col>
+      <Col className="coin-desc-link">
+        <Row className="coin-desc">
+          <Title level={3} className="coin-details-heading">
+            What is {cryptoDetails?.name}
+            {HTMLReactParser(cryptoDetails.description)}
+          </Title>
+        </Row>
+        <Col clasName="coin-links">
+          <Title level={3} className="coin-details-heading">
+            {cryptoDetails.name} Links
+          </Title>
+          {cryptoDetails.links.map((link) => (
+            <Row className="coin-link" key={link.name}>
+              <Title level={5} className="link-name">
+                {link.type}
+              </Title>
+              <a href={link.url} target="_blank" rel="noreferrer">
+                {link.name}
+              </a>
+            </Row>
           ))}
         </Col>
       </Col>
