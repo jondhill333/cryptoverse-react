@@ -16,16 +16,29 @@ import {
   ToTopOutlined,
 } from "@ant-design/icons";
 
-import { useGetCryptoDetailsQuery } from "../services/cryptoApi";
+import {
+  useGetCryptoDetailsQuery,
+  useGetCryptoHistoryQuery,
+} from "../services/cryptoApi";
+import LineChart from "./LineChart";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const CryptoDetails = ({}) => {
+const CryptoDetails = () => {
   const { coinId } = useParams();
-  const [timePeriod, setTimePeriod] = useState("7d");
+  // const [timePeriod, setTimePeriod] = useState("7d");
   const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
+  const { data: coinHistory } = useGetCryptoHistoryQuery({
+    coinId,
+    // timePeriod,
+  });
   const cryptoDetails = data?.data?.coin;
+
+  if (isFetching) return "Loading...";
+
+  console.log(coinHistory);
+  // console.log(timePeriod);
 
   const time = ["3h", "24h", "7d", "30d", "1y", "3m", "3y", "5y"];
 
@@ -91,11 +104,6 @@ const CryptoDetails = ({}) => {
   ];
 
   return (
-    // <>
-    //   <div>here i am {stats[1].value}</div>
-    //   <div>here i am {stats[1].icon}</div>
-    // </>
-    // );
     <Col className="coin-details-container">
       <Col className="coin-details-container">
         <Title level={2} className="coin-name">
@@ -111,12 +119,17 @@ const CryptoDetails = ({}) => {
         defaultValue="7d"
         className="select-timeperiod"
         placeholder="Select Time Period"
-        onChange={(value) => setTimePeriod(value)}
+        // onChange={(value) => setTimePeriod(value)}
       >
-        {time.map((date) => (
-          <Option key={date}>{date}</Option>
+        {time.map((date, i) => (
+          <Option key={date + i}>{date}</Option>
         ))}
       </Select>
+      <LineChart
+        coinHistory={coinHistory}
+        currentPrice={millify(cryptoDetails.price)}
+        name={cryptoDetails.name}
+      />
       <Col className="stats-container">
         <Col className="coin-value-statistics">
           <Col className="coin-value-statistics-header">
@@ -126,7 +139,7 @@ const CryptoDetails = ({}) => {
             <p>An overview showing the stats of {cryptoDetails.name}</p>
           </Col>
           {stats.map(({ icon, title, value }) => (
-            <Col className="coin-stats">
+            <Col className="coin-stats" key={value}>
               <Col className="coin-stats-name">
                 <Text>{icon}</Text>
                 <Text>{title}</Text>
@@ -143,7 +156,7 @@ const CryptoDetails = ({}) => {
             <p>An overview showing the stats of all cryptocurrencies</p>
           </Col>
           {genericStats.map(({ icon, title, value }) => (
-            <Col className="coin-stats">
+            <Col className="coin-stats" key={value}>
               <Col className="coin-stats-name">
                 <Text>{icon}</Text>
                 <Text>{title}</Text>
@@ -155,17 +168,17 @@ const CryptoDetails = ({}) => {
       </Col>
       <Col className="coin-desc-link">
         <Row className="coin-desc">
-          <Title level={3} className="coin-details-heading">
+          <Title level={2} className="coin-details-heading">
             What is {cryptoDetails?.name}
             {HTMLReactParser(cryptoDetails.description)}
           </Title>
         </Row>
-        <Col clasName="coin-links">
+        <Col className="coin-links">
           <Title level={3} className="coin-details-heading">
             {cryptoDetails.name} Links
           </Title>
-          {cryptoDetails.links.map((link) => (
-            <Row className="coin-link" key={link.name}>
+          {cryptoDetails.links.map((link, i) => (
+            <Row className="coin-link" key={link.name + i}>
               <Title level={5} className="link-name">
                 {link.type}
               </Title>
