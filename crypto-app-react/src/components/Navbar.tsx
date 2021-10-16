@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 import { Button, Menu, Typography, Avatar } from "antd";
 import { Link } from "react-router-dom";
 import {
@@ -11,9 +11,9 @@ import {
 
 import icon from "../images/cryptoverse.png";
 
-const Navbar = () => {
-  const [activeMenu, setActiveMenu] = useState(true);
-  const [screenSize, setScreenSize] = useState(null);
+const Navbar: FC = () => {
+  const [activeMenu, setActiveMenu] = useState<boolean>(true);
+  const [screenSize, setScreenSize] = useState<any>(null);
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);

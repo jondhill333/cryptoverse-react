@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { Select, Typography, Row, Col, Avatar, Card } from "antd";
 import moment from "moment";
 
@@ -12,13 +12,31 @@ const { Option } = Select;
 const demoImage =
   "https://www.bing.com/th?id=OVFT.mpzuVZnv8dwIMRfQGPbOPC&pid=News";
 
-const News = ({ simplified }) => {
-  const [newsCategory, setNewsCategory] = useState("Cryptocurrency");
+type Simplified = {
+  simplified: boolean;
+};
+
+interface Coin {
+  name: string;
+}
+
+interface Article {
+  name: string;
+  url: string;
+  datePublished: string;
+  description: string;
+  provider: any;
+  image: any;
+}
+
+const News = ({ simplified }: Simplified) => {
+  const [newsCategory, setNewsCategory] = useState<string>("Cryptocurrency");
   const { data: cryptoNews } = useGetCryptoNewsQuery({
     newsCategory,
     count: simplified ? 6 : 12,
   });
   const { data } = useGetCryptosQuery(100);
+  console.log(cryptoNews);
 
   if (!cryptoNews?.value) return <Loader />;
   return (
@@ -30,13 +48,13 @@ const News = ({ simplified }) => {
             className="select-news"
             placeholder="Select a Crypto"
             optionFilterProp="children"
-            onChange={(value) => setNewsCategory(value)}
+            onChange={(value: string) => setNewsCategory(value)}
             filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase())
+              option?.children.toLowerCase().indexOf(input.toLowerCase())
             }
           >
             <Option value="cryptocurrency">Cryptocurrency</Option>
-            {data?.data?.coins.map((coin) => (
+            {data?.data?.coins.map((coin: Coin) => (
               <Option key={coin.name} value={coin.name}>
                 {coin.name}
               </Option>
@@ -44,7 +62,7 @@ const News = ({ simplified }) => {
           </Select>
         </Col>
       )}
-      {cryptoNews.value.map((article, i) => (
+      {cryptoNews.value.map((article: Article, i: number) => (
         <Col xs={24} sm={12} lg={12} key={article.datePublished + i}>
           <Card className="news-card">
             <a href={article.url} target="_blank" rel="noreferrer">
@@ -59,7 +77,7 @@ const News = ({ simplified }) => {
                 />
               </div>
               <p>
-                {article.description > 100
+                {article.description.length > 100
                   ? `${article.description.substring(0, 100)}...`
                   : article.description}
               </p>
@@ -76,9 +94,7 @@ const News = ({ simplified }) => {
                     {article?.provider[0]?.name}
                   </Text>
                 </div>
-                <Text>
-                  {moment(article.datePublished).startOf("ss").fromNow()}
-                </Text>
+                <Text>{moment(article.datePublished).fromNow()}</Text>
               </div>
             </a>
           </Card>
