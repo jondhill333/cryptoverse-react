@@ -11,9 +11,11 @@ import {
 
 import icon from "../images/cryptoverse.png";
 
+type ScreenSize = number | null;
+
 const Navbar: FC = () => {
   const [activeMenu, setActiveMenu] = useState<boolean>(true);
-  const [screenSize, setScreenSize] = useState<any>(null);
+  const [screenSize, setScreenSize] = useState<ScreenSize>(null);
 
   useEffect(() => {
     const handleResize = () => setScreenSize(window.innerWidth);
@@ -24,7 +26,7 @@ const Navbar: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (screenSize < 768) {
+    if (screenSize && screenSize < 768) {
       setActiveMenu(false);
     } else {
       setActiveMenu(true);

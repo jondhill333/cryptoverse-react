@@ -6,14 +6,32 @@ import { Card, Row, Col, Input } from "antd";
 import { useGetCryptosQuery } from "../services/cryptoApi";
 import Loader from "./Loader";
 
-const Cryptocurrencies = ({ simplified }) => {
+type Simplified = {
+  simplified: boolean;
+};
+
+interface Coin {
+  name: string;
+}
+
+interface Currency {
+  id: string;
+  name: string;
+  rank: string;
+  iconUrl: string;
+  price: number;
+  marketCap: number;
+  change: number;
+}
+
+const Cryptocurrencies = ({ simplified }: Simplified) => {
   const count = simplified ? 10 : 100;
   const { data: cryptosList, isFetching } = useGetCryptosQuery(count);
-  const [cryptos, setCryptos] = useState([]);
+  const [cryptos, setCryptos] = useState<any>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const filteredData = cryptosList?.data?.coins.filter((coin) =>
+    const filteredData = cryptosList?.data?.coins.filter((coin: Coin) =>
       coin.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setCryptos(filteredData);
@@ -31,7 +49,7 @@ const Cryptocurrencies = ({ simplified }) => {
         </div>
       )}
       <Row gutter={[32, 32]} className="crypto-card-container">
-        {cryptos?.map((currency) => (
+        {cryptos?.map((currency: Currency) => (
           <Col xs={24} sm={12} lg={6} className="crypto-card" key={currency.id}>
             <Link to={`/crypto/${currency.id}`}>
               <Card
