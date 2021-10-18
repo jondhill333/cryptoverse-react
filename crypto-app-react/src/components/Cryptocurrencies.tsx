@@ -27,7 +27,7 @@ interface Currency {
 const Cryptocurrencies = ({ simplified }: Simplified) => {
   const count = simplified ? 10 : 100;
   const { data: cryptosList, isFetching } = useGetCryptosQuery(count);
-  const [cryptos, setCryptos] = useState<any>([]);
+  const [cryptos, setCryptos] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {

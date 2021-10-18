@@ -23,20 +23,42 @@ import {
 import LineChart from "./LineChart";
 
 import Loader from "./Loader";
+import { NumericLiteral } from "typescript";
+import { AnySoaRecord } from "dns";
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
+type Params = {
+  coinId: string;
+};
+
+type CryptoDetailsData = {
+  name: string;
+  price: number;
+  rank: number;
+  totalSupply: number;
+  volume: number;
+  marketCap: number;
+  numberOfMarkets: number;
+  numberOfExchanges: number;
+  circulatingSupply: number;
+  approvedSupply: number;
+  description: string;
+  slug: string;
+  links: AnySoaRecord;
+  allTimeHigh: any;
+};
+
 const CryptoDetails = () => {
-  const { coinId } = useParams();
-  // const [timePeriod, setTimePeriod] = useState("7d");
+  const { coinId } = useParams<Params>();
   const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
   const { data: coinHistory } = useGetCryptoHistoryQuery({
     coinId,
     // timePeriod,
   });
-  const cryptoDetails = data?.data?.coin;
-  console.log(cryptoDetails);
+  const cryptoDetails: CryptoDetailsData = data?.data?.coin;
+  const links: any = cryptoDetails?.links;
 
   if (isFetching) return <Loader />;
 
@@ -128,7 +150,7 @@ const CryptoDetails = () => {
       <LineChart
         coinHistory={coinHistory}
         currentPrice={millify(cryptoDetails.price)}
-        name={cryptoDetails.name}
+        coinName={cryptoDetails.name}
       />
       <Col className="stats-container">
         <Col className="coin-value-statistics">
@@ -156,7 +178,7 @@ const CryptoDetails = () => {
             <p>An overview showing the stats of all cryptocurrencies</p>
           </Col>
           {genericStats.map(({ icon, title, value }) => (
-            <Col className="coin-stats" key={value}>
+            <Col className="coin-stats" key={value.toString()}>
               <Col className="coin-stats-name">
                 <Text>{icon}</Text>
                 <Text>{title}</Text>
@@ -177,7 +199,7 @@ const CryptoDetails = () => {
           <Title level={3} className="coin-details-heading">
             {cryptoDetails.name} Links
           </Title>
-          {cryptoDetails.links.map((link, i) => (
+          {links.map((link: any, i: number) => (
             <Row className="coin-link" key={link.name + i}>
               <Title level={5} className="link-name">
                 {link.type}
