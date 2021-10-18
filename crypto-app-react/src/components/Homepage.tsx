@@ -11,9 +11,17 @@ import News from "./News";
 
 const { Title } = Typography;
 
+interface GlobalStats {
+  total: number;
+  totalExchanges: number;
+  totalMarketCap: number;
+  total24hVolume: number;
+  totalMarkets: number;
+}
+
 const Homepage = () => {
   const { data, isFetching } = useGetCryptosQuery(10);
-  const globalStats = data?.data?.stats;
+  const globalStats: GlobalStats = data?.data?.stats;
 
   if (isFetching) return <Loader />;
 

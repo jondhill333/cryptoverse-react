@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import HTMLReactParser from "html-react-parser";
 import { useParams } from "react-router";
 import millify from "millify";
-import { Card, Row, Col, Input, Typography, Select } from "antd";
+import { Row, Col, Typography, Select } from "antd";
 import {
   MoneyCollectOutlined,
   DollarCircleOutlined,
@@ -13,7 +13,6 @@ import {
   CheckOutlined,
   NumberOutlined,
   ThunderboltOutlined,
-  ToTopOutlined,
 } from "@ant-design/icons";
 
 import {
@@ -23,7 +22,7 @@ import {
 import LineChart from "./LineChart";
 
 import Loader from "./Loader";
-import { NumericLiteral } from "typescript";
+
 import { AnySoaRecord } from "dns";
 
 const { Title, Text } = Typography;

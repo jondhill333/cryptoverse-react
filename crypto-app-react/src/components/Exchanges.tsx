@@ -9,8 +9,19 @@ import { useGetCryptoExchangesQuery } from "../services/cryptoApi";
 const { Text } = Typography;
 const { Panel } = Collapse;
 
+interface Exchange {
+  id: string;
+  name: string;
+  rank: number;
+  iconUrl: string;
+  description: string;
+  volume: number;
+  numberOfMarkets: number;
+  marketShare: number;
+}
+
 const Exchanges = () => {
-  const { data: cryptoExhanges, isFetching } = useGetCryptoExchangesQuery();
+  const { data: cryptoExhanges, isFetching } = useGetCryptoExchangesQuery(null);
   if (isFetching) return <Loader />;
   const exchangesList = cryptoExhanges?.data?.exchanges;
 
@@ -22,10 +33,11 @@ const Exchanges = () => {
         <Col span={6}>Markets</Col>
         <Col span={6}>Change</Col>
       </Row>
-      {exchangesList.map((exchange) => (
+      {exchangesList.map((exchange: Exchange, i: number) => (
         <Col span={24} key={exchange.id}>
           <Collapse>
             <Panel
+              key={i}
               showArrow={false}
               header={
                 <Row key={exchange.id}>
